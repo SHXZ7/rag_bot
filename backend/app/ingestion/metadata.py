@@ -1,6 +1,6 @@
 import yt_dlp
 
-from app.ingestion.cookies import get_cookiefile
+from app.ingestion.cookies import get_cookiefile_for_url
 from app.ingestion.instagram_web import (
     fetch_media_metadata,
     fetch_profile_metadata
@@ -11,14 +11,25 @@ class MetadataExtractor:
 
     def extract(self, url: str):
 
+        cookies_file = get_cookiefile_for_url(url)
+
         opts = {
             "quiet": True,
-            "skip_download": True
+            "no_warnings": False,
+            "skip_download": True,
+            "noplaylist": True,
+            # We only want metadata — accept any available format and never
+            # crash if a specific format is missing.
+            "format": "bestaudio/best",
+            "ignore_no_formats_error": True,
         }
 
-        cookies_file = get_cookiefile()
+
         if cookies_file:
+            print(f"[metadata] Using cookies file: {cookies_file}")
             opts["cookiefile"] = cookies_file
+        else:
+            print("[metadata] WARNING: No cookies file found — YouTube requests may be blocked.")
 
         with yt_dlp.YoutubeDL(opts) as ydl:
 
