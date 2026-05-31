@@ -4,7 +4,6 @@ import os
 import shutil
 
 from app.ingestion.cookies import get_cookiefile
-from faster_whisper import WhisperModel
 from yt_dlp.utils import DownloadError
 
 
@@ -12,16 +11,24 @@ class InstagramTranscriptService:
 
     def __init__(self):
         self.model = None
+        self.use_local = False
 
     def _load_model(self):
         if self.model is None:
-            # Disable CUDA to avoid cublas64_12.dll issues on Windows
-            os.environ["CUDA_VISIBLE_DEVICES"] = ""
-            self.model = WhisperModel(
-                "base",
-                device="cpu",
-                compute_type="int8"
-            )
+            try:
+                from faster_whisper import WhisperModel
+                # Disable CUDA to avoid cublas64_12.dll issues on Windows
+                os.environ["CUDA_VISIBLE_DEVICES"] = ""
+                print("[instagram] Loading local faster-whisper model...")
+                self.model = WhisperModel(
+                    "base",
+                    device="cpu",
+                    compute_type="int8"
+                )
+                self.use_local = True
+            except ImportError:
+                print("[instagram] faster-whisper not installed. Falling back to Groq Whisper API.")
+                self.use_local = False
 
     def _find_downloaded_file(self, temp_dir):
         files = [
@@ -102,15 +109,26 @@ class InstagramTranscriptService:
                 print("Instagram download did not produce a media file")
                 return "Transcript not available for this Instagram video"
 
-            print(f"Transcribing: {temp_file}")
-            segments, _ = self.model.transcribe(
-                temp_file
-            )
-
-            transcript = " ".join(
-                s.text
-                for s in segments
-            )
+            if self.use_local and self.model is not None:
+                print(f"Transcribing locally: {temp_file}")
+                segments, _ = self.model.transcribe(
+                    temp_file
+                )
+                transcript = " ".join(
+                    s.text
+                    for s in segments
+                )
+            else:
+                # Groq Whisper API fallback
+                from app.services.llm import client
+                print(f"Transcribing via Groq Whisper API: {temp_file}")
+                with open(temp_file, "rb") as file:
+                    transcription = client.audio.transcriptions.create(
+                        file=(os.path.basename(temp_file), file.read()),
+                        model="whisper-large-v3",
+                        response_format="text"
+                    )
+                    transcript = transcription
 
         print(f"Transcript length: {len(transcript)} chars")
         print(f"First 200 chars: {transcript[:200]}")

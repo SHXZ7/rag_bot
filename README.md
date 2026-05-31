@@ -109,14 +109,20 @@ To extract metadata and transcripts without getting blocked, you **must** provid
     source venv/bin/activate
     ```
 3.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+    *   **For Cloud / Serverless Deployments (Vercel)**:
+        ```bash
+        pip install -r requirements.txt
+        ```
+        *(This builds a lightweight serverless bundle under 100MB by routing transcription to Groq's high-speed Whisper API and embeddings to Hugging Face Inference API).*
+    *   **For Local Offline Execution (PyTorch + Local Models)**:
+        ```bash
+        pip install -r requirements-local.txt
+        ```
 4.  Configure Environment Variables:
     ```bash
     cp .env.example .env
     ```
-    *Open the newly created `.env` file and insert your **Groq API Key** (`GROQ_API_KEY`).*
+    *Open the newly created `.env` file and insert your **Groq API Key** (`GROQ_API_KEY`). If deploying serverless or running in lightweight mode, also add your free Hugging Face read token (`HF_TOKEN`) to retrieve embeddings online.*
 5.  Start the FastAPI Server:
     ```bash
     python -m uvicorn app.main:app --reload

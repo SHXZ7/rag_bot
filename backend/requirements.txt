@@ -6,12 +6,8 @@ langgraph
 
 chromadb
 
-sentence-transformers
-
 yt-dlp
 youtube-transcript-api
-
-faster-whisper
 
 python-dotenv
 
