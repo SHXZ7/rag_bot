@@ -57,24 +57,24 @@ Uses customized `yt-dlp` options including `format: "bestaudio/best"` and `ignor
 ```
 ├── backend/                  # FastAPI Application
 │   ├── app/
-│   │   ├── api/              # API Endpoints (ingest, chat, metadata)
-│   │   ├── core/             # LLM setup, local Chroma DB & embeddings clients
-│   │   ├── ingestion/        # Media downloads, transcripts, cookie handling
-│   │   ├── rag/              # Retrieval Augmented Generation chains & graphs
-│   │   ├── schemas/          # Pydantic request/response structures
+│   │   ├── api/              # API Endpoints (chat.py, ingest.py, test_rag.py)
+│   │   ├── core/             # Base configurations, vector store, embeds, history
+│   │   ├── ingestion/        # Platforms (youtube.py, instagram.py) & cookies parsing
+│   │   ├── rag/              # RAG graph orchestrator, indexer, prompts, and retrievers
+│   │   ├── schemas/          # Pydantic data schemas for API requests/responses
+│   │   ├── services/         # Core application logic (metadata, comparison, chat, LLM)
 │   │   └── main.py           # Application Entrypoint
 │   ├── requirements.txt      # Python dependencies
 │   └── .env.example          # Environment template
 │
 ├── frontend/                 # Next.js 13+ Application (App Router)
-│   ├── app/                  # Routes and main single-page layout
-│   ├── components/           # UI elements (video, chat, shared)
-│   │   ├── chat/             # Chat message, citation and streaming views
-│   │   └── video/            # Cards, metric bars, and engagement rows
-│   ├── hooks/                # Zustand-backed hooks for state synchronization
-│   ├── lib/                  # Sizing metrics and global configuration
-│   ├── package.json          # Node dependencies
-│   └── claude.md             # Absolute styling guidelines and system values
+│   ├── app/                  # Application router directory
+│   │   ├── globals.css       # Premium editorial dark variables & styling
+│   │   ├── layout.js         # Base document layout structure
+│   │   └── page.js           # Single-page interactive URL ingestion and chat UI
+│   ├── claude.md             # Aesthetic specification and style guidelines
+│   ├── package.json          # Node dependencies configuration
+│   └── jsconfig.json         # JavaScript configuration
 │
 ├── cookies.txt               # Netscape cookies for Instagram (Git Ignored)
 └── ytcookies.txt             # Netscape cookies for YouTube (Git Ignored)
