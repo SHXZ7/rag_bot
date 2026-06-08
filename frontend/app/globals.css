@@ -1068,3 +1068,245 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Cookies Banner & Panel ── */
+.cookies-banner {
+  animation: fade-up 500ms ease both;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-left: 2px solid var(--accent);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  flex: 0 0 auto;
+}
+
+.cookies-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cookies-banner-content .banner-icon {
+  color: var(--accent);
+  font-size: 16px;
+}
+
+.cookies-banner-content p {
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.cookies-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.banner-btn-primary {
+  background: var(--accent);
+  color: var(--text-inverse);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  min-height: 28px;
+  padding: 5px 12px;
+  text-transform: uppercase;
+  border-radius: 0;
+  border: none;
+}
+
+.banner-btn-primary:hover {
+  background: var(--accent-dim);
+}
+
+.banner-btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  min-height: 28px;
+  padding: 5px 12px;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+.banner-btn-ghost:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.cookies-config-panel {
+  animation: fade-up 500ms ease both;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.config-header h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.config-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge-active {
+  color: var(--signal-up);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.badge-inactive {
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.config-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 11px;
+  min-height: 24px;
+  padding: 3px 8px;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+.config-toggle-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.config-body {
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.config-help {
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.config-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.config-inputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.config-inputs label span {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.config-inputs textarea {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  height: 80px;
+  padding: 6px 8px;
+  resize: vertical;
+  width: 100%;
+  border-radius: 0;
+}
+
+.config-inputs textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.config-inputs textarea:focus {
+  border-color: var(--accent);
+}
+
+.config-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.config-btn-save {
+  background: var(--accent);
+  color: var(--text-inverse);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  min-height: 28px;
+  padding: 5px 12px;
+  text-transform: uppercase;
+  border-radius: 0;
+  border: none;
+}
+
+.config-btn-save:hover {
+  background: var(--accent-dim);
+}
+
+.config-btn-clear {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  min-height: 28px;
+  padding: 5px 12px;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+.config-btn-clear:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .cookies-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .config-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+

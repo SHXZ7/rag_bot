@@ -9,9 +9,9 @@ from app.ingestion.instagram_web import (
 
 class MetadataExtractor:
 
-    def extract(self, url: str):
+    def extract(self, url: str, cookie_file: str = None):
 
-        cookies_file = get_cookiefile_for_url(url)
+        cookies_file = cookie_file or get_cookiefile_for_url(url)
 
         opts = {
             "quiet": True,
@@ -57,12 +57,12 @@ class MetadataExtractor:
             profile_metadata = {}
             media_metadata = {}
             try:
-                profile_metadata = fetch_profile_metadata(username)
+                profile_metadata = fetch_profile_metadata(username, cookie_file=cookies_file)
             except Exception as e:
                 print(f"Instagram profile metadata fallback failed: {e}")
 
             try:
-                media_metadata = fetch_media_metadata(url, info)
+                media_metadata = fetch_media_metadata(url, info, cookie_file=cookies_file)
             except Exception as e:
                 print(f"Instagram media metadata fallback failed: {e}")
 

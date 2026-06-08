@@ -67,7 +67,7 @@ class InstagramTranscriptService:
 
         return None
 
-    def get_transcript(self, url):
+    def get_transcript(self, url, cookie_file=None):
 
         self._load_model()
 
@@ -92,7 +92,7 @@ class InstagramTranscriptService:
             if ffmpeg_location:
                 opts["ffmpeg_location"] = ffmpeg_location
 
-            cookies_file = get_cookiefile()
+            cookies_file = cookie_file or get_cookiefile()
             if cookies_file:
                 opts["cookiefile"] = cookies_file
 

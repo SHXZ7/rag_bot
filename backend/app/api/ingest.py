@@ -5,6 +5,7 @@ from app.services.processor import processor
 from app.rag.indexer import index_video
 from app.core.video_store import video_store
 
+
 router = APIRouter()
 
 
@@ -13,12 +14,16 @@ async def ingest(data: IngestRequest):
 
     a = await processor.process(
         data.video_a_url,
-        "A"
+        "A",
+        cookies_yt=data.cookies_yt,
+        cookies_ig=data.cookies_ig
     )
 
     b = await processor.process(
         data.video_b_url,
-        "B"
+        "B",
+        cookies_yt=data.cookies_yt,
+        cookies_ig=data.cookies_ig
     )
 
     chunks_a = index_video(a)

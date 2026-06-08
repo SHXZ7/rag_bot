@@ -5,6 +5,8 @@ from typing import Optional
 class IngestRequest(BaseModel):
     video_a_url: str
     video_b_url: str
+    cookies_yt: Optional[str] = None
+    cookies_ig: Optional[str] = None
 
 
 class VideoData(BaseModel):

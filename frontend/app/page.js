@@ -251,6 +251,13 @@ export default function Home() {
   const [error, setError] = useState("");
   const [theme, setTheme] = useState("dark");
 
+  // Custom User Cookies States
+  const [showCookiesBanner, setShowCookiesBanner] = useState(false);
+  const [showCookiesSetup, setShowCookiesSetup] = useState(false);
+  const [ytCookiesInput, setYtCookiesInput] = useState("");
+  const [igCookiesInput, setIgCookiesInput] = useState("");
+  const [hasCustomCookies, setHasCustomCookies] = useState(false);
+
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -269,6 +276,44 @@ export default function Home() {
     "Compare the creator styles",
     "What topics are discussed?",
   ];
+
+  // Retrieve custom cookies from LocalStorage on mount
+  useEffect(() => {
+    const savedYt = localStorage.getItem("yt_cookies") || "";
+    const savedIg = localStorage.getItem("ig_cookies") || "";
+    setYtCookiesInput(savedYt);
+    setIgCookiesInput(savedIg);
+    
+    const active = !!(savedYt.trim() || savedIg.trim());
+    setHasCustomCookies(active);
+    
+    const dismissed = localStorage.getItem("cookies_banner_dismissed") === "true";
+    if (!active && !dismissed) {
+      setShowCookiesBanner(true);
+    }
+  }, []);
+
+  const saveCookies = () => {
+    localStorage.setItem("yt_cookies", ytCookiesInput);
+    localStorage.setItem("ig_cookies", igCookiesInput);
+    const active = !!(ytCookiesInput.trim() || igCookiesInput.trim());
+    setHasCustomCookies(active);
+    setShowCookiesSetup(false);
+    setShowCookiesBanner(false);
+  };
+
+  const clearCookies = () => {
+    localStorage.removeItem("yt_cookies");
+    localStorage.removeItem("ig_cookies");
+    setYtCookiesInput("");
+    setIgCookiesInput("");
+    setHasCustomCookies(false);
+  };
+
+  const dismissBanner = () => {
+    localStorage.setItem("cookies_banner_dismissed", "true");
+    setShowCookiesBanner(false);
+  };
 
   useEffect(() => {
     setThreadId(`thread-${Date.now()}`);
@@ -296,6 +341,9 @@ export default function Home() {
     setError("");
     setIsIngesting(true);
 
+    const cookies_yt = localStorage.getItem("yt_cookies") || "";
+    const cookies_ig = localStorage.getItem("ig_cookies") || "";
+
     try {
       const response = await fetch(`${API_BASE}/ingest`, {
         method: "POST",
@@ -304,7 +352,9 @@ export default function Home() {
         },
         body: JSON.stringify({
           video_a_url: videoAUrl,
-          video_b_url: videoBUrl
+          video_b_url: videoBUrl,
+          cookies_yt: cookies_yt.trim() || null,
+          cookies_ig: cookies_ig.trim() || null
         })
       });
 
@@ -450,6 +500,96 @@ export default function Home() {
           <span className="thread-pill">{threadId}</span>
         </div>
       </section>
+
+      {/* Cookie Setup Banner */}
+      {showCookiesBanner && (
+        <section className="cookies-banner">
+          <div className="cookies-banner-content">
+            <span className="banner-icon">✦</span>
+            <p>
+              Compare with custom accounts: Provide your own YouTube and Instagram Netscape cookies to bypass rate limits, or proceed using the server's default configuration.
+            </p>
+          </div>
+          <div className="cookies-banner-actions">
+            <button
+              onClick={() => {
+                setShowCookiesSetup(true);
+                setShowCookiesBanner(false);
+              }}
+              className="banner-btn-primary"
+              type="button"
+            >
+              Provide Cookies
+            </button>
+            <button
+              onClick={dismissBanner}
+              className="banner-btn-ghost"
+              type="button"
+            >
+              Dismiss
+            </button>
+          </div>
+        </section>
+      )}
+
+      {/* Cookies Config Panel */}
+      {(showCookiesSetup || hasCustomCookies) && (
+        <section className="cookies-config-panel">
+          <div className="config-header">
+            <h3>✦ Custom Session Credentials</h3>
+            <div className="config-header-actions">
+              {hasCustomCookies ? (
+                <span className="badge-active">[Cookies Active]</span>
+              ) : (
+                <span className="badge-inactive">[No Custom Cookies]</span>
+              )}
+              <button
+                className="config-toggle-btn"
+                onClick={() => setShowCookiesSetup(!showCookiesSetup)}
+                type="button"
+              >
+                {showCookiesSetup ? "Collapse" : "Configure"}
+              </button>
+            </div>
+          </div>
+
+          {showCookiesSetup && (
+            <div className="config-body">
+              <p className="config-help">
+                Paste the contents of your Netscape cookie files. Leaving fields blank will fall back to using server configurations (or running unauthenticated).
+              </p>
+              <div className="config-inputs">
+                <label>
+                  <span>YouTube Cookies (Netscape format)</span>
+                  <textarea
+                    onChange={(e) => setYtCookiesInput(e.target.value)}
+                    placeholder="# Netscape HTTP Cookie File..."
+                    value={ytCookiesInput}
+                  />
+                </label>
+                <label>
+                  <span>Instagram Cookies (Netscape format)</span>
+                  <textarea
+                    onChange={(e) => setIgCookiesInput(e.target.value)}
+                    placeholder="# Netscape HTTP Cookie File..."
+                    value={igCookiesInput}
+                  />
+                </label>
+              </div>
+              <div className="config-actions">
+                <button className="config-btn-save" onClick={saveCookies} type="button">
+                  Save Credentials
+                </button>
+                {hasCustomCookies && (
+                  <button className="config-btn-clear" onClick={clearCookies} type="button">
+                    Clear & Use Server Default
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Ingest Panel */}
       <form className="ingest-panel" onSubmit={ingestVideos}>

@@ -39,8 +39,8 @@ def shortcode_to_media_id(shortcode):
     return media_id
 
 
-def _session():
-    cookiefile = get_cookiefile()
+def _session(cookie_file=None):
+    cookiefile = cookie_file or get_cookiefile()
     if not cookiefile:
         return None
 
@@ -58,11 +58,11 @@ def _session():
     return session
 
 
-def fetch_profile_metadata(username):
+def fetch_profile_metadata(username, cookie_file=None):
     if not username:
         return {}
 
-    session = _session()
+    session = _session(cookie_file)
     if session is None:
         return {}
 
@@ -88,12 +88,12 @@ def fetch_profile_metadata(username):
     }
 
 
-def fetch_media_metadata(url, info=None):
+def fetch_media_metadata(url, info=None, cookie_file=None):
     shortcode = extract_shortcode(url, info)
     if not shortcode:
         return {}
 
-    session = _session()
+    session = _session(cookie_file)
     if session is None:
         return {}
 

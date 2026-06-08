@@ -21,9 +21,9 @@ class YoutubeTranscriptService:
         parsed = urlparse(url)
         return parse_qs(parsed.query)["v"][0]
 
-    def get_transcript(self, url: str) -> str:
+    def get_transcript(self, url: str, cookie_file: str = None) -> str:
         video_id = self.get_video_id(url)
-        cookies_file = get_youtube_cookiefile()
+        cookies_file = cookie_file or get_youtube_cookiefile()
 
         if cookies_file:
             print(f"[youtube] Using cookies: {cookies_file}")
