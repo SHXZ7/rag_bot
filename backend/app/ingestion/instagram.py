@@ -45,14 +45,14 @@ class InstagramTranscriptService:
         if not files:
             return None
 
-        wav_files = [
+        audio_files = [
             path
             for path in files
-            if path.lower().endswith(".wav")
+            if any(path.lower().endswith(ext) for ext in (".wav", ".m4a", ".mp3", ".mp4", ".webm", ".ogg"))
         ]
 
-        if wav_files:
-            return max(wav_files, key=os.path.getsize)
+        if audio_files:
+            return max(audio_files, key=os.path.getsize)
 
         return max(files, key=os.path.getsize)
 
@@ -72,25 +72,14 @@ class InstagramTranscriptService:
         self._load_model()
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            ffmpeg_location = self._get_ffmpeg_location()
             opts = {
-                "format": "bestaudio/best",
+                "format": "bestaudio[ext=m4a]/bestaudio/best",
                 "outtmpl": os.path.join(
                     temp_dir,
-                    "%(id)s"
+                    "%(id)s.%(ext)s"
                 ),
-                "postprocessors": [
-                    {
-                        "key": "FFmpegExtractAudio",
-                        "preferredcodec": "wav",
-                        "preferredquality": "192"
-                    }
-                ],
                 "noplaylist": True
             }
-
-            if ffmpeg_location:
-                opts["ffmpeg_location"] = ffmpeg_location
 
             cookies_file = cookie_file or get_cookiefile()
             if cookies_file:

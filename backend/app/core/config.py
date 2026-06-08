@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     GROQ_API_KEY: str = ""
     HF_TOKEN: str = ""
+    QDRANT_URL: str = ""
+    QDRANT_API_KEY: str = ""
 
     CHROMA_DB_PATH: str = "./chroma_db"
 
